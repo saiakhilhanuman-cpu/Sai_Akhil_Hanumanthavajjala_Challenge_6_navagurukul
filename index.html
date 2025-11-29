@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Learning Content Ingestion Sai Akhil Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      margin-top: 10px;
+    }
+    pre {
+      background: #272822;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Content Ingestion By Sai Akhil</h1>
+  
+  <div class="container">
+    <h2>Upload Your File</h2>
+    <form id="uploadForm">
+      <input type="file" id="fileInput" accept=".pdf,.docx,.txt" required />
+      <br><br>
+      <button type="submit">Upload & Process</button>
+    </form>
+
+    <h3>Response:</h3>
+    <pre id="output">Upload a file to see results...</pre>
+  </div>
+
+  <script>
+    const form = document.getElementById("uploadForm");
+    const output = document.getElementById("output");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const fileInput = document.getElementById("fileInput");
+      if (!fileInput.files.length) return;
+
+      const formData = new FormData();
+      formData.append("file", fileInput.files[0]);
+
+      output.textContent = "Processing... please wait.";
+
+      try {
+        const res = await fetch("http://127.0.0.1:8000/ingest", {
+          method: "POST",
+          body: formData
+        });
+        const data = await res.json();
+        output.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        output.textContent = "Error: " + err;
+      }
+    });
+  </script>
+
+</body>
+</html>
